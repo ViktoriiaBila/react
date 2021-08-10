@@ -1,0 +1,21 @@
+.tools_wrapper {
+  background-color: #a9a9a9;
+
+  .colorButton {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+
+    &__selected {
+      border: 3px solid #c91c95;
+    }
+  }
+}
+
+.controlPanel_wrapper {
+  background-color: #000;
+
+  .input {
+    color: #fff;
+  }
+}
