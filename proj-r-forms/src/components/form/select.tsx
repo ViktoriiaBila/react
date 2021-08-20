@@ -1,4 +1,5 @@
 import React from 'react';
+import { defaultCountryOption } from '../shared/formItem';
 
 interface ISelectProps {
   title: string;
@@ -6,6 +7,8 @@ interface ISelectProps {
   value: string;
   onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   option: Array<string>;
+  invalid: boolean;
+  invalidMessage: string;
 }
 
 export function Select(props: ISelectProps): JSX.Element {
@@ -13,7 +16,10 @@ export function Select(props: ISelectProps): JSX.Element {
 
   return (
     <label htmlFor={props.name}>
-      <p>{props.title}</p>
+      <p>
+        {props.title}
+        {props.invalid && <span> * {props.invalidMessage}</span>}
+      </p>
       <select
         name={props.name}
         value={props.value}
@@ -21,6 +27,7 @@ export function Select(props: ISelectProps): JSX.Element {
           props.onChange(event);
         }}
       >
+        <option>{defaultCountryOption}</option>
         {options}
       </select>
     </label>

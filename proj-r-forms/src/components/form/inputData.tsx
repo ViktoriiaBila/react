@@ -1,20 +1,21 @@
 import React from 'react';
 
-interface IInputTextProps {
+interface IInputDataProps {
   title: string;
   type: string;
   name: string;
   value: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   invalid: boolean;
+  invalidMessage: string;
 }
 
-export function InputText(props: IInputTextProps): JSX.Element {
+export function InputData(props: IInputDataProps): JSX.Element {
   return (
     <label htmlFor={props.name}>
       <p>
         {props.title}
-        {props.invalid && <span>* must be filled</span>}
+        {props.invalid && <span> * {props.invalidMessage}</span>}
       </p>
       <input
         type={props.type}

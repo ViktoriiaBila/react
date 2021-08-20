@@ -6,12 +6,17 @@ interface IInputAgreeProps {
   name: string;
   checked: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  invalid: boolean;
+  invalidMessage: string;
 }
 
 export function InputAgree(props: IInputAgreeProps): JSX.Element {
   return (
     <label htmlFor={props.name}>
-      <p>{props.title}</p>
+      <p>
+        {props.title}
+        {props.invalid && <span> * {props.invalidMessage}</span>}
+      </p>
       <input
         type={props.type}
         name={props.name}
