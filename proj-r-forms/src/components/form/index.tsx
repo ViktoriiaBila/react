@@ -11,6 +11,7 @@ import {
   EFormItemTitle,
   defaultCountryOption,
 } from '../shared/formItem';
+import { BtnSend } from './btnSend';
 
 export function Form(): JSX.Element {
   const [formItems, setFormItems] = useState({
@@ -29,6 +30,45 @@ export function Form(): JSX.Element {
     agree: false,
   });
 
+  const validateFirstName = (value: string) => {
+    setErrors((prev) => ({
+      ...prev,
+      firstName: textValidate(value),
+    }));
+  };
+  const validateLastName = (value: string) => {
+    setErrors((prev) => ({
+      ...prev,
+      lastName: textValidate(value),
+    }));
+  };
+  const validateBirthDate = (value: string) => {
+    setErrors((prev) => ({
+      ...prev,
+      birthDate: dateValidate(value),
+    }));
+  };
+  const validateCountry = (value: string) => {
+    setErrors((prev) => ({
+      ...prev,
+      country: selectValidate(value),
+    }));
+  };
+  const validateAgree = (value: boolean) => {
+    setErrors((prev) => ({
+      ...prev,
+      agree: !value,
+    }));
+  };
+
+  const validateFormItem = (name: string, value: string | boolean) => {
+    if (name === EFormItemNames.firstName) validateFirstName(value as string);
+    if (name === EFormItemNames.lastName) validateLastName(value as string);
+    if (name === EFormItemNames.birthDate) validateBirthDate(value as string);
+    if (name === EFormItemNames.country) validateCountry(value as string);
+    if (name === EFormItemNames.agree) validateAgree(value as boolean);
+  };
+
   const formItemsChangeHandler = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
@@ -38,67 +78,12 @@ export function Form(): JSX.Element {
         ? (event as React.ChangeEvent<HTMLInputElement>).target.checked
         : event.target.value;
 
-    validate(type, name, value);
+    validateFormItem(name, value);
 
     setFormItems((prev) => ({
       ...prev,
       [name]: value,
     }));
-  };
-
-  const validate = (type: string, name: string, value: string | boolean) => {
-    if (type === EFormItemType.text) {
-      if (textValidate(value as string)) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: true,
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: false,
-        }));
-      }
-    }
-    if (type === EFormItemType.date) {
-      if (dateValidate(value as string)) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: true,
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: false,
-        }));
-      }
-    }
-    if (type === EFormItemType.select) {
-      if (selectValidate(value as string)) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: true,
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: false,
-        }));
-      }
-    }
-    if (type === EFormItemType.checkbox) {
-      if (!value) {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: true,
-        }));
-      } else {
-        setErrors((prev) => ({
-          ...prev,
-          [name]: false,
-        }));
-      }
-    }
   };
 
   return (
@@ -161,39 +146,15 @@ export function Form(): JSX.Element {
         invalid={errors.agree}
         invalidMessage={EFormItemInvalidMessage.agree}
       />
-      <div>
-        <input
-          type="submit"
-          value="Send"
-          onClick={() => {
-            validate(
-              EFormItemType.text,
-              EFormItemNames.firstName,
-              formItems.firstName,
-            );
-            validate(
-              EFormItemType.text,
-              EFormItemNames.lastName,
-              formItems.lastName,
-            );
-            validate(
-              EFormItemType.date,
-              EFormItemNames.birthDate,
-              formItems.birthDate,
-            );
-            validate(
-              EFormItemType.select,
-              EFormItemNames.country,
-              formItems.country,
-            );
-            validate(
-              EFormItemType.checkbox,
-              EFormItemNames.agree,
-              formItems.agree,
-            );
-          }}
-        />
-      </div>
+      <BtnSend
+        onClick={() => {
+          validateFirstName(formItems.firstName);
+          validateLastName(formItems.lastName);
+          validateBirthDate(formItems.birthDate);
+          validateCountry(formItems.country);
+          validateAgree(formItems.agree);
+        }}
+      />
     </form>
   );
 }
