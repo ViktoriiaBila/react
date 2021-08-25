@@ -13,7 +13,18 @@ import {
 } from '../shared/formItem';
 import { BtnSend } from './btnSend';
 
-export function Form(): JSX.Element {
+interface IFormValue {
+  firstName: string;
+  lastName: string;
+  birthDate: string;
+  country: string;
+}
+
+interface IFormProps {
+  setFormValues: React.Dispatch<React.SetStateAction<Array<IFormValue> | null>>;
+}
+
+export function Form(props: IFormProps): JSX.Element {
   const [formItems, setFormItems] = useState({
     firstName: '',
     lastName: '',
@@ -86,21 +97,34 @@ export function Form(): JSX.Element {
     }));
   };
 
+  const reset = () => {
+    setFormItems({
+      firstName: '',
+      lastName: '',
+      birthDate: '',
+      country: defaultCountryOption,
+      agree: false,
+    });
+  };
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (
+      !errors.firstName &&
+      !errors.lastName &&
+      !errors.birthDate &&
+      !errors.country &&
+      !errors.agree
+    ) {
+      props.setFormValues((state) =>
+        state !== null ? [...state, formItems] : [formItems],
+      );
+      reset();
+    }
+  };
+
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (
-          !errors.firstName &&
-          !errors.lastName &&
-          !errors.birthDate &&
-          !errors.country &&
-          !errors.agree
-        ) {
-          console.log(formItems);
-        }
-      }}
-    >
+    <form onSubmit={submitHandler}>
       <InputData
         title={EFormItemTitle.firstName}
         type={EFormItemType.text}
